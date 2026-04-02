@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VUMC Live</title>
+
+<style>
+*{box-sizing:border-box;}
+
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+background:#000;
+color:#fff;
+font-family:Arial, Helvetica, sans-serif;
+overflow:hidden;
+}
+
+.screen{
+width:100%;
+height:100%;
+display:none;
+position:absolute;
+inset:0;
+}
+
+.screen.active{
+display:flex;
+}
+
+/* LIVE */
+#liveScreen{
+align-items:center;
+justify-content:center;
+background:#000;
+}
+
+#liveFrame{
+width:100vw;
+height:100vh;
+border:none;
+}
+
+.back-note-live{
+position:absolute;
+bottom:18px;
+right:22px;
+font-size:18px;
+background:rgba(0,0,0,.5);
+padding:8px 14px;
+border-radius:10px;
+}
+
+/* OFFLINE */
+#offlineScreen{
+background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),
+url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1600&q=80')
+center/cover no-repeat;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:40px;
+}
+
+h1{font-size:64px;margin:0 0 10px;}
+.sub{font-size:28px;margin-bottom:15px;}
+.service{font-size:32px;font-weight:bold;margin-bottom:10px;}
+.label{font-size:22px;margin-bottom:25px;}
+
+.countdown{
+display:flex;
+gap:15px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.box{
+background:rgba(255,255,255,.1);
+padding:20px;
+border-radius:14px;
+min-width:130px;
+}
+
+.num{font-size:48px;font-weight:bold;}
+.small{font-size:16px;}
+
+.back{
+margin-top:20px;
+font-size:18px;
+opacity:.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LIVE -->
+<div id="liveScreen" class="screen">
+<iframe id="liveFrame"
+allow="autoplay; encrypted-media"
+allowfullscreen></iframe>
+<div class="back-note-live">Press BACK to return</div>
+</div>
+
+<!-- OFFLINE -->
+<div id="offlineScreen" class="screen active">
+<div>
+
+<h1>Next Livestream</h1>
+<div class="sub">Versailles United Methodist Church</div>
+
+<div id="nextTime" class="service"></div>
+<div id="nextLabel" class="label"></div>
+
+<div class="countdown">
+<div class="box"><div id="d" class="num">0</div><div class="small">Days</div></div>
+<div class="box"><div id="h" class="num">0</div><div class="small">Hours</div></div>
+<div class="box"><div id="m" class="num">0</div><div class="small">Minutes</div></div>
+<div class="box"><div id="s" class="num">0</div><div class="small">Seconds</div></div>
+</div>
+
+<div class="back">Press BACK to return</div>
+
+</div>
+</div>
+
+<script>
+
+const CHANNEL_ID = "UC_svgodM3blLqWEBQ5yNjmA";
+
+const SERVICES = [
+{ name:"Traditional Worship", hour:9, minute:30, window:50 },
+{ name:"Contemporary Worship", hour:10, minute:30, window:90 }
+];
+
+function nowET(){
+return new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+}
+
+function serviceDate(base,s){
+let d=new Date(base);
+d.setHours(s.hour,s.minute,0,0);
+return d;
+}
+
+function nextService(){
+let now=nowET();
+
+if(now.getDay()==0){
+for(let s of SERVICES){
+let start=serviceDate(now,s);
+if(now<start) return {...s,start};
+}
+}
+
+let next=new Date(now);
+let add=(7-now.getDay())||7;
+next.setDate(now.getDate()+add);
+
+let s=SERVICES[0];
+return {...s,start:serviceDate(next,s)};
+}
+
+function liveNow(){
+let now=nowET();
+if(now.getDay()!=0) return false;
+
+for(let s of SERVICES){
+let start=serviceDate(now,s);
+let end=new Date(start.getTime()+s.window*60000);
+if(now>=start && now<=end) return true;
+}
+return false;
+}
+
+function update(){
+
+let live=liveNow();
+
+if(live){
+document.getElementById("liveScreen").classList.add("active");
+document.getElementById("offlineScreen").classList.remove("active");
+
+document.getElementById("liveFrame").src =
+`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
+
+return;
+}
+
+let ns=nextService();
+let now=nowET();
+let diff=ns.start-now;
+
+let t=Math.max(0,Math.floor(diff/1000));
+
+document.getElementById("d").textContent=Math.floor(t/86400);
+document.getElementById("h").textContent=Math.floor(t%86400/3600);
+document.getElementById("m").textContent=Math.floor(t%3600/60);
+document.getElementById("s").textContent=t%60;
+
+let time=new Date();
+time.setHours(ns.hour,ns.minute);
+
+document.getElementById("nextTime").textContent =
+"Sunday "+time.toLocaleTimeString("en-US",{hour:'numeric',minute:'2-digit'})+" Eastern";
+
+document.getElementById("nextLabel").textContent=ns.name;
+
+}
+
+setInterval(update,1000);
+update();
+
+</script>
+
+</body>
+</html>
