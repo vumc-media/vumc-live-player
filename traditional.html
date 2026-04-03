@@ -9,51 +9,70 @@
 
     body {
       margin: 0;
-      background: #000;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.7) 20%, #000 45%),
+        #000;
       color: #fff;
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .container {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 28px 28px 34px;
+    .page {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .hero {
+      padding: 42px 42px 18px;
     }
 
     .eyebrow {
-      font-size: 16px;
+      font-size: 14px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
       color: rgba(255,255,255,0.72);
       margin-bottom: 10px;
     }
 
     h1 {
       margin: 0 0 10px;
-      font-size: 52px;
-      line-height: 1.1;
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -1px;
     }
 
     .subtext {
+      max-width: 900px;
       font-size: 24px;
-      color: rgba(255,255,255,0.84);
-      margin-bottom: 28px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 18px;
     }
 
     .status-box {
-      margin-bottom: 22px;
-      padding: 16px 18px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 14px;
-      font-size: 20px;
-      color: rgba(255,255,255,0.86);
+      display: inline-block;
+      font-size: 18px;
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 10px 14px;
+    }
+
+    .section {
+      padding: 6px 42px 36px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: rgba(255,255,255,0.96);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
     }
 
     .card {
@@ -61,15 +80,23 @@
       text-decoration: none;
       color: #fff;
       background: #111;
-      border-radius: 16px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .card:hover,
+    .card:focus {
+      transform: scale(1.04);
+      border-color: rgba(255,255,255,0.35);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
     }
 
     .thumb-wrap {
       position: relative;
       aspect-ratio: 16 / 9;
       background: #000;
+      overflow: hidden;
     }
 
     .thumb-wrap img {
@@ -81,76 +108,84 @@
 
     .badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(179,0,0,0.95);
+      top: 10px;
+      left: 10px;
+      background: #d60000;
       color: #fff;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 7px 11px;
-      border-radius: 999px;
-      letter-spacing: 0.4px;
+      padding: 6px 10px;
+      letter-spacing: 0.5px;
     }
 
     .card-content {
-      padding: 14px 14px 16px;
+      padding: 10px 10px 12px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      min-height: 92px;
     }
 
     .card-title {
-      font-size: 22px;
-      line-height: 1.3;
+      font-size: 17px;
+      line-height: 1.28;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .card-meta {
-      font-size: 17px;
-      color: rgba(255,255,255,0.76);
+      font-size: 14px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.3;
     }
 
     .note {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 18px;
-      color: rgba(255,255,255,0.70);
+      padding: 0 42px 34px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.62);
     }
 
-    .message {
-      font-size: 22px;
-      padding: 24px;
-      background: #111;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
+    @media (max-width: 1400px) {
+      .grid { grid-template-columns: repeat(4, 1fr); }
     }
 
-    @media (max-width: 1200px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1100px) {
+      h1 { font-size: 48px; }
+      .subtext { font-size: 20px; }
+      .grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     @media (max-width: 800px) {
-      .container { padding: 18px 18px 26px; }
-      h1 { font-size: 40px; }
-      .subtext { font-size: 20px; }
-      .grid { grid-template-columns: 1fr; }
+      .hero, .section, .note { padding-left: 18px; padding-right: 18px; }
+      h1 { font-size: 38px; }
+      .subtext { font-size: 18px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="eyebrow">Versailles United Methodist Church</div>
-    <h1>Traditional Worship</h1>
-    <div class="subtext">Past services and upcoming Traditional livestreams</div>
+  <div class="page">
+    <div class="hero">
+      <div class="eyebrow">Versailles United Methodist Church</div>
+      <h1>Traditional Worship</h1>
+      <div class="subtext">Past services and upcoming Traditional livestreams.</div>
+      <div id="statusBox" class="status-box">Loading Traditional Worship...</div>
+    </div>
 
-    <div id="statusBox" class="status-box">Loading Traditional Worship...</div>
-    <div id="grid" class="grid"></div>
+    <div class="section">
+      <div class="section-title">Browse Services</div>
+      <div id="grid" class="grid"></div>
+    </div>
 
-    <div class="note">Select a service to watch. Press BACK to return to the channel.</div>
+    <div class="note">Select a service to watch. Press BACK on your Roku remote to return.</div>
   </div>
 
   <script>
     const API_KEY = "AIzaSyCxjuHkcGO-pr1lRIEK8AUOt6RkJKQjpEA";
     const PLAYLIST_ID = "PLD_PrR9HqVpnPmDBpEx0CEQ4B29Kk1HbE";
-    const MAX_RESULTS = 18;
+    const MAX_RESULTS = 24;
     const WATCH_PAGE = "watch.html";
 
     const grid = document.getElementById("grid");
@@ -187,7 +222,7 @@
       if (!dateString) return "";
       const date = new Date(dateString);
       return date.toLocaleDateString("en-US", {
-        month: "long",
+        month: "short",
         day: "numeric",
         year: "numeric"
       });
@@ -277,21 +312,16 @@
           return;
         }
 
-        const ids = items
-          .map(item => item?.contentDetails?.videoId)
-          .filter(Boolean);
-
+        const ids = items.map(item => item?.contentDetails?.videoId).filter(Boolean);
         const videoData = await fetchVideoDetails(ids);
         const videos = sortVideos(videoData.items || []);
 
         grid.innerHTML = "";
-        videos.forEach(video => {
-          grid.appendChild(buildCard(video));
-        });
+        videos.forEach(video => grid.appendChild(buildCard(video)));
 
         statusBox.textContent = "Choose a service to watch.";
       } catch (error) {
-        statusBox.innerHTML = `Unable to load Traditional Worship right now. Check your API key and restrictions.`;
+        statusBox.textContent = "Unable to load Traditional Worship right now. Check your API key and restrictions.";
         console.error(error);
       }
     }
