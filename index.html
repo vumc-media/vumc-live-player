@@ -4,217 +4,236 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VUMC Live</title>
-
 <style>
-*{box-sizing:border-box;}
-
+*{box-sizing:border-box}
 html,body{
-margin:0;
-padding:0;
-width:100%;
-height:100%;
-background:#000;
-color:#fff;
-font-family:Arial, Helvetica, sans-serif;
-overflow:hidden;
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:#fff;
+  font-family:Arial, Helvetica, sans-serif;
+  overflow:hidden;
 }
-
 .screen{
-width:100%;
-height:100%;
-display:none;
-position:absolute;
-inset:0;
+  width:100%;
+  height:100%;
+  display:none;
+  position:absolute;
+  inset:0;
 }
-
-.screen.active{
-display:flex;
-}
-
-/* LIVE */
+.screen.active{display:flex}
 #liveScreen{
-align-items:center;
-justify-content:center;
-background:#000;
+  background:#000;
+  align-items:center;
+  justify-content:center;
 }
-
 #liveFrame{
-width:100vw;
-height:100vh;
-border:none;
+  width:100vw;
+  height:100vh;
+  border:none;
 }
-
 .back-note-live{
-position:absolute;
-bottom:18px;
-right:22px;
-font-size:18px;
-background:rgba(0,0,0,.5);
-padding:8px 14px;
-border-radius:10px;
+  position:absolute;
+  bottom:18px;
+  right:22px;
+  font-size:18px;
+  background:rgba(0,0,0,.5);
+  padding:8px 14px;
+  border-radius:10px;
 }
-
-/* OFFLINE */
 #offlineScreen{
-background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),
-url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1600&q=80')
-center/cover no-repeat;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:40px;
+  background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),
+  url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1600&q=80')
+  center/cover no-repeat;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px;
 }
-
-h1{font-size:64px;margin:0 0 10px;}
-.sub{font-size:28px;margin-bottom:15px;}
-.service{font-size:32px;font-weight:bold;margin-bottom:10px;}
-.label{font-size:22px;margin-bottom:25px;}
-
+h1{font-size:64px;margin:0 0 10px}
+.sub{font-size:28px;margin-bottom:15px}
+.service{font-size:32px;font-weight:bold;margin-bottom:10px}
+.label{font-size:22px;margin-bottom:25px}
 .countdown{
-display:flex;
-gap:15px;
-justify-content:center;
-flex-wrap:wrap;
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
 }
-
 .box{
-background:rgba(255,255,255,.1);
-padding:20px;
-border-radius:14px;
-min-width:130px;
+  background:rgba(255,255,255,.1);
+  padding:20px;
+  border-radius:14px;
+  min-width:130px;
 }
-
-.num{font-size:48px;font-weight:bold;}
-.small{font-size:16px;}
-
+.num{font-size:48px;font-weight:bold}
+.small{font-size:16px}
 .back{
-margin-top:20px;
-font-size:18px;
-opacity:.8;
+  margin-top:20px;
+  font-size:18px;
+  opacity:.8;
 }
-
+.status{
+  margin-top:18px;
+  font-size:18px;
+  opacity:.8;
+}
 </style>
 </head>
-
 <body>
 
-<!-- LIVE -->
 <div id="liveScreen" class="screen">
-<iframe id="liveFrame"
-allow="autoplay; encrypted-media"
-allowfullscreen></iframe>
-<div class="back-note-live">Press BACK to return</div>
+  <iframe id="liveFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <div class="back-note-live">Press BACK to return</div>
 </div>
 
-<!-- OFFLINE -->
 <div id="offlineScreen" class="screen active">
-<div>
+  <div>
+    <h1>Next Livestream</h1>
+    <div class="sub">Versailles United Methodist Church</div>
 
-<h1>Next Livestream</h1>
-<div class="sub">Versailles United Methodist Church</div>
+    <div id="nextTime" class="service">Checking schedule...</div>
+    <div id="nextLabel" class="label">Please wait</div>
 
-<div id="nextTime" class="service"></div>
-<div id="nextLabel" class="label"></div>
+    <div class="countdown">
+      <div class="box"><div id="d" class="num">0</div><div class="small">Days</div></div>
+      <div class="box"><div id="h" class="num">0</div><div class="small">Hours</div></div>
+      <div class="box"><div id="m" class="num">0</div><div class="small">Minutes</div></div>
+      <div class="box"><div id="s" class="num">0</div><div class="small">Seconds</div></div>
+    </div>
 
-<div class="countdown">
-<div class="box"><div id="d" class="num">0</div><div class="small">Days</div></div>
-<div class="box"><div id="h" class="num">0</div><div class="small">Hours</div></div>
-<div class="box"><div id="m" class="num">0</div><div class="small">Minutes</div></div>
-<div class="box"><div id="s" class="num">0</div><div class="small">Seconds</div></div>
-</div>
-
-<div class="back">Press BACK to return</div>
-
-</div>
+    <div id="statusText" class="status">Looking for upcoming scheduled streams...</div>
+    <div class="back">Press BACK to return</div>
+  </div>
 </div>
 
 <script>
-
+const API_KEY = "AIzaSyCxjuHkcGO-pr1lRIEK8AUOt6RkJKQjpEA";
 const CHANNEL_ID = "UC_svgodM3blLqWEBQ5yNjmA";
 
-const SERVICES = [
-{ name:"Traditional Worship", hour:9, minute:30, window:50 },
-{ name:"Contemporary Worship", hour:10, minute:30, window:90 }
-];
+let nextStream = null;
+let liveVideoId = null;
 
-function nowET(){
-return new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+async function fetchJson(url){
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("API request failed");
+  return await res.json();
 }
 
-function serviceDate(base,s){
-let d=new Date(base);
-d.setHours(s.hour,s.minute,0,0);
-return d;
+async function getLiveStream(){
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video&maxResults=1&key=${API_KEY}`;
+  const data = await fetchJson(url);
+  if(data.items && data.items.length){
+    return data.items[0].id.videoId;
+  }
+  return null;
 }
 
-function nextService(){
-let now=nowET();
+async function getUpcomingStream(){
+  const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=upcoming&type=video&order=date&maxResults=5&key=${API_KEY}`;
+  const searchData = await fetchJson(searchUrl);
 
-if(now.getDay()==0){
-for(let s of SERVICES){
-let start=serviceDate(now,s);
-if(now<start) return {...s,start};
-}
-}
+  if(!searchData.items || !searchData.items.length) return null;
 
-let next=new Date(now);
-let add=(7-now.getDay())||7;
-next.setDate(now.getDate()+add);
+  const ids = searchData.items.map(item => item.id.videoId).join(",");
+  const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id=${ids}&key=${API_KEY}`;
+  const videosData = await fetchJson(videosUrl);
 
-let s=SERVICES[0];
-return {...s,start:serviceDate(next,s)};
-}
+  if(!videosData.items || !videosData.items.length) return null;
 
-function liveNow(){
-let now=nowET();
-if(now.getDay()!=0) return false;
+  const sorted = videosData.items
+    .filter(v => v.liveStreamingDetails && v.liveStreamingDetails.scheduledStartTime)
+    .sort((a,b) => new Date(a.liveStreamingDetails.scheduledStartTime) - new Date(b.liveStreamingDetails.scheduledStartTime));
 
-for(let s of SERVICES){
-let start=serviceDate(now,s);
-let end=new Date(start.getTime()+s.window*60000);
-if(now>=start && now<=end) return true;
-}
-return false;
+  return sorted.length ? sorted[0] : null;
 }
 
-function update(){
-
-let live=liveNow();
-
-if(live){
-document.getElementById("liveScreen").classList.add("active");
-document.getElementById("offlineScreen").classList.remove("active");
-
-document.getElementById("liveFrame").src =
-`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
-
-return;
+function showLive(videoId){
+  document.getElementById("liveScreen").classList.add("active");
+  document.getElementById("offlineScreen").classList.remove("active");
+  document.getElementById("liveFrame").src =
+    `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&playsinline=1`;
 }
 
-let ns=nextService();
-let now=nowET();
-let diff=ns.start-now;
-
-let t=Math.max(0,Math.floor(diff/1000));
-
-document.getElementById("d").textContent=Math.floor(t/86400);
-document.getElementById("h").textContent=Math.floor(t%86400/3600);
-document.getElementById("m").textContent=Math.floor(t%3600/60);
-document.getElementById("s").textContent=t%60;
-
-let time=new Date();
-time.setHours(ns.hour,ns.minute);
-
-document.getElementById("nextTime").textContent =
-"Sunday "+time.toLocaleTimeString("en-US",{hour:'numeric',minute:'2-digit'})+" Eastern";
-
-document.getElementById("nextLabel").textContent=ns.name;
-
+function showOffline(){
+  document.getElementById("offlineScreen").classList.add("active");
+  document.getElementById("liveScreen").classList.remove("active");
+  document.getElementById("liveFrame").src = "";
 }
 
-setInterval(update,1000);
-update();
+function formatEastern(dateString){
+  const d = new Date(dateString);
+  return d.toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }) + " Eastern";
+}
 
+function updateCountdown(){
+  if(!nextStream || !nextStream.liveStreamingDetails) return;
+
+  const now = new Date();
+  const target = new Date(nextStream.liveStreamingDetails.scheduledStartTime);
+  const diff = Math.max(0, Math.floor((target - now) / 1000));
+
+  document.getElementById("d").textContent = Math.floor(diff / 86400);
+  document.getElementById("h").textContent = Math.floor((diff % 86400) / 3600);
+  document.getElementById("m").textContent = Math.floor((diff % 3600) / 60);
+  document.getElementById("s").textContent = diff % 60;
+}
+
+function renderUpcoming(stream){
+  document.getElementById("nextTime").textContent =
+    formatEastern(stream.liveStreamingDetails.scheduledStartTime);
+  document.getElementById("nextLabel").textContent =
+    stream.snippet.title || "Upcoming Livestream";
+  document.getElementById("statusText").textContent =
+    "Countdown is following your scheduled YouTube livestream.";
+}
+
+function renderNoUpcoming(){
+  document.getElementById("nextTime").textContent = "No upcoming livestream scheduled";
+  document.getElementById("nextLabel").textContent = "Schedule your next YouTube livestream to show it here";
+  document.getElementById("statusText").textContent = "This page updates from your YouTube schedule.";
+}
+
+async function refreshState(){
+  try{
+    liveVideoId = await getLiveStream();
+
+    if(liveVideoId){
+      showLive(liveVideoId);
+      return;
+    }
+
+    showOffline();
+
+    nextStream = await getUpcomingStream();
+
+    if(nextStream){
+      renderUpcoming(nextStream);
+      updateCountdown();
+    } else {
+      renderNoUpcoming();
+    }
+  } catch(err){
+    showOffline();
+    document.getElementById("nextTime").textContent = "Unable to load stream schedule";
+    document.getElementById("nextLabel").textContent = "Check API key and YouTube API restrictions";
+    document.getElementById("statusText").textContent = "The page loaded, but YouTube schedule data could not be retrieved.";
+    console.error(err);
+  }
+}
+
+refreshState();
+setInterval(updateCountdown, 1000);
+setInterval(refreshState, 60000);
 </script>
 
 </body>
