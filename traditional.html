@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traditional Worship | VUMC</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 26px 26px 36px;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 16px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 44px;
+      line-height: 1.1;
+    }
+
+    .subtext {
+      font-size: 22px;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 0;
+    }
+
+    .player-wrap {
+      margin-top: 22px;
+      margin-bottom: 30px;
+      background: #111;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .player-frame {
+      width: 100%;
+      height: 680px;
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    .player-meta {
+      padding: 18px 20px 20px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+
+    .player-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .player-status {
+      font-size: 18px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .section-title {
+      font-size: 30px;
+      margin: 0 0 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: #121212;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .card:hover,
+    .card.active {
+      transform: scale(1.01);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .thumb-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(179, 0, 0, 0.92);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 11px;
+      border-radius: 999px;
+      letter-spacing: 0.4px;
+    }
+
+    .card-content {
+      padding: 14px 14px 16px;
+    }
+
+    .card-title {
+      font-size: 21px;
+      line-height: 1.3;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-meta {
+      font-size: 16px;
+      color: rgba(255,255,255,0.76);
+    }
+
+    .note {
+      margin-top: 28px;
+      font-size: 18px;
+      color: rgba(255,255,255,0.72);
+      text-align: center;
+    }
+
+    .loading,
+    .error {
+      padding: 28px;
+      font-size: 22px;
+      background: #121212;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media (max-width: 1200px) {
+      .player-frame {
+        height: 560px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        padding: 18px 18px 28px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .subtext {
+        font-size: 18px;
+      }
+
+      .player-frame {
+        height: 300px;
+      }
+
+      .player-title {
+        font-size: 22px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="eyebrow">Versailles United Methodist Church</div>
+      <h1>Traditional Worship</h1>
+      <p class="subtext">Past services and upcoming Traditional livestreams</p>
+    </div>
+
+    <div class="player-wrap">
+      <iframe
+        id="player"
+        class="player-frame"
+        src=""
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        title="Traditional Worship Player">
+      </iframe>
+      <div class="player-meta">
+        <div id="playerTitle" class="player-title">Loading Traditional Worship...</div>
+        <div id="playerStatus" class="player-status">Please wait</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Traditional Worship Archive</h2>
+    <div id="grid" class="grid"></div>
+
+    <div id="messageBox" class="loading">Loading playlist...</div>
+
+    <div class="note">Press BACK on your Roku remote to return to the channel</div>
+  </div>
+
+  <script>
+    const API_KEY = "AIzaSyCxjuHkcGO-pr1lRIEK8AUOt6RkJKQjpEA";
+    const PLAYLIST_ID = "PLD_PrR9HqVpnPmDBpEx0CEQ4B29Kk1HbE";
+    const MAX_RESULTS = 18;
+
+    const grid = document.getElementById("grid");
+    const messageBox = document.getElementById("messageBox");
+    const player = document.getElementById("player");
+    const playerTitle = document.getElementById("playerTitle");
+    const playerStatus = document.getElementById("playerStatus");
+
+    let cards = [];
+
+    async function fetchPlaylistItems() {
+      const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=${MAX_RESULTS}&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Could not load playlist items.");
+      }
+      return await response.json();
+    }
+
+    async function fetchVideoDetails(videoIds) {
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails,status&id=${videoIds.join(",")}&key=${API_KEY}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Could not load video details.");
+      }
+      return await response.json();
+    }
+
+    function getBestThumbnail(snippet) {
+      return (
+        snippet?.thumbnails?.maxres?.url ||
+        snippet?.thumbnails?.standard?.url ||
+        snippet?.thumbnails?.high?.url ||
+        snippet?.thumbnails?.medium?.url ||
+        snippet?.thumbnails?.default?.url ||
+        ""
+      );
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
+
+    function getStatusText(video) {
+      const liveState = video?.snippet?.liveBroadcastContent;
+
+      if (liveState === "live") return "Live now";
+      if (liveState === "upcoming") {
+        const start = video?.liveStreamingDetails?.scheduledStartTime;
+        return start ? `Upcoming • ${formatDate(start)}` : "Upcoming livestream";
+      }
+
+      const published = video?.snippet?.publishedAt;
+      return published ? formatDate(published) : "Previous service";
+    }
+
+    function getBadgeText(video) {
+      const liveState = video?.snippet?.liveBroadcastContent;
+      if (liveState === "live") return "LIVE";
+      if (liveState === "upcoming") return "UPCOMING";
+      return "";
+    }
+
+    function getEmbedUrl(videoId, autoplay = false) {
+      return `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? 1 : 0}&mute=0&rel=0&playsinline=1`;
+    }
+
+    function setFeaturedVideo(video, clickedCard = null) {
+      const videoId = video.id;
+      player.src = getEmbedUrl(videoId, true);
+      playerTitle.textContent = video.snippet.title;
+      playerStatus.textContent = getStatusText(video);
+
+      cards.forEach(card => card.classList.remove("active"));
+      if (clickedCard) clickedCard.classList.add("active");
+    }
+
+    function createCard(video, index) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const badge = getBadgeText(video);
+      const thumb = getBestThumbnail(video.snippet);
+      const meta = getStatusText(video);
+
+      card.innerHTML = `
+        <div class="thumb-wrap">
+          <img src="${thumb}" alt="${video.snippet.title}">
+          ${badge ? `<div class="badge">${badge}</div>` : ""}
+        </div>
+        <div class="card-content">
+          <div class="card-title">${video.snippet.title}</div>
+          <div class="card-meta">${meta}</div>
+        </div>
+      `;
+
+      card.addEventListener("click", () => {
+        setFeaturedVideo(video, card);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      if (index === 0) {
+        card.classList.add("active");
+      }
+
+      cards.push(card);
+      return card;
+    }
+
+    function sortVideos(videos) {
+      return videos.sort((a, b) => {
+        const rank = (video) => {
+          const state = video?.snippet?.liveBroadcastContent;
+          if (state === "live") return 0;
+          if (state === "upcoming") return 1;
+          return 2;
+        };
+
+        const rankDiff = rank(a) - rank(b);
+        if (rankDiff !== 0) return rankDiff;
+
+        const aDate =
+          a?.liveStreamingDetails?.scheduledStartTime ||
+          a?.snippet?.publishedAt ||
+          "";
+        const bDate =
+          b?.liveStreamingDetails?.scheduledStartTime ||
+          b?.snippet?.publishedAt ||
+          "";
+
+        return new Date(bDate) - new Date(aDate);
+      });
+    }
+
+    async function loadTraditionalPlaylist() {
+      try {
+        const playlistData = await fetchPlaylistItems();
+        const items = playlistData.items || [];
+
+        if (!items.length) {
+          throw new Error("No videos found in this playlist.");
+        }
+
+        const ids = items
+          .map(item => item?.contentDetails?.videoId)
+          .filter(Boolean);
+
+        const videoDetails = await fetchVideoDetails(ids);
+        const videos = sortVideos(videoDetails.items || []);
+
+        grid.innerHTML = "";
+        messageBox.style.display = "none";
+
+        videos.forEach((video, index) => {
+          const card = createCard(video, index);
+          grid.appendChild(card);
+        });
+
+        setFeaturedVideo(videos[0], cards[0]);
+      } catch (error) {
+        grid.innerHTML = "";
+        messageBox.className = "error";
+        messageBox.textContent = "Unable to load Traditional Worship right now. Please check your API key and playlist settings.";
+        console.error(error);
+      }
+    }
+
+    loadTraditionalPlaylist();
+  </script>
+</body>
+</html>
