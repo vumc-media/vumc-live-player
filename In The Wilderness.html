@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Series | VUMC</title>
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+padding:25px;
+}
+
+h1{
+font-size:48px;
+margin-bottom:10px;
+}
+
+.sub{
+font-size:22px;
+opacity:.8;
+margin-bottom:20px;
+}
+
+/* PLAYER */
+.player{
+width:100%;
+height:650px;
+border:none;
+margin-bottom:20px;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.card{
+cursor:pointer;
+background:#111;
+border-radius:12px;
+overflow:hidden;
+transition:.2s;
+}
+
+.card:hover{
+transform:scale(1.02);
+}
+
+.card img{
+width:100%;
+}
+
+.card p{
+padding:10px;
+font-size:20px;
+margin:0;
+}
+
+.badge{
+position:absolute;
+background:red;
+padding:6px 10px;
+font-size:14px;
+top:10px;
+left:10px;
+border-radius:5px;
+}
+
+.thumb{
+position:relative;
+}
+
+.note{
+margin-top:20px;
+opacity:.7;
+font-size:16px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Current Series</h1>
+<div class="sub">Watch the latest messages from our current series</div>
+
+<iframe id="player" class="player" allowfullscreen></iframe>
+
+<div id="grid" class="grid"></div>
+
+<div class="note">Press BACK on your Roku remote to return</div>
+
+</div>
+
+<script>
+
+const API_KEY = "AIzaSyCxjuHkcGO-pr1lRIEK8AUOt6RkJKQjpEA";
+const PLAYLIST_ID = "PLD_PrR9HqVpnOz0YXlyRin76oa6FeDVfM";
+
+async function loadVideos(){
+
+const listURL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=15&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+const res = await fetch(listURL);
+const data = await res.json();
+
+const ids = data.items.map(i=>i.snippet.resourceId.videoId).join(",");
+
+const detailURL = `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id=${ids}&key=${API_KEY}`;
+const res2 = await fetch(detailURL);
+const videos = await res2.json();
+
+const sorted = videos.items.sort((a,b)=>{
+const rank = v=>{
+if(v.snippet.liveBroadcastContent==="live") return 0;
+if(v.snippet.liveBroadcastContent==="upcoming") return 1;
+return 2;
+};
+return rank(a)-rank(b);
+});
+
+const grid = document.getElementById("grid");
+
+sorted.forEach((v,i)=>{
+
+const id = v.id;
+const title = v.snippet.title;
+const thumb = v.snippet.thumbnails.high.url;
+
+let badge="";
+if(v.snippet.liveBroadcastContent==="live") badge="LIVE";
+if(v.snippet.liveBroadcastContent==="upcoming") badge="UPCOMING";
+
+const card = document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+<div class="thumb">
+<img src="${thumb}">
+${badge ? `<div class="badge">${badge}</div>` : ""}
+</div>
+<p>${title}</p>
+`;
+
+card.onclick=()=>{
+document.getElementById("player").src =
+`https://www.youtube.com/embed/${id}?autoplay=1`;
+};
+
+grid.appendChild(card);
+
+if(i===0){
+document.getElementById("player").src =
+`https://www.youtube.com/embed/${id}`;
+}
+
+});
+
+}
+
+loadVideos();
+
+</script>
+
+</body>
+</html>
