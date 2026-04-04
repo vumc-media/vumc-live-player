@@ -1,0 +1,48 @@
+{
+  "providerName": "Versailles United Methodist Church",
+  "lastUpdated": "2026-04-04T12:00:00Z",
+  "language": "en-US",
+  "liveFeeds": [
+    {
+      "id": "live",
+      "title": "Watch Live",
+      "content": {
+        "dateAdded": "2026-04-04T12:00:00Z",
+        "videos": [
+          {
+            "title": "Live Worship Service",
+            "videoType": "youtube",
+            "url": "https://www.youtube.com/@versaillesumc/live",
+            "thumbnail": "https://img.youtube.com/vi/8AO8Ysunzzk&pp=0gcJCdkKAYcqIYzv/hqdefault.jpg"
+          }
+        ]
+      }
+    }
+  ],
+  "playlists": [
+    {
+      "name": "Traditional Worship",
+      "itemIds": ["t1","t2"]
+    },
+    {
+      "name": "In The Wilderness",
+      "itemIds": ["s1","s2"]
+    }
+  ],
+  "shortFormVideos": [
+    {
+      "id": "t1",
+      "title": "Traditional Worship",
+      "thumbnail": "https://img.youtube.com/vi/uMA2EvdNi10/hqdefault.jpg",
+      "videoType": "youtube",
+      "url": "https://www.youtube.com/watch?v=uMA2EvdNi10"
+    },
+    {
+      "id": "s1",
+      "title": "In The Wilderness",
+      "thumbnail": "https://img.youtube.com/vi/K9p8hkBKrpI&t=686s/hqdefault.jpg",
+      "videoType": "youtube",
+      "url": "https://www.youtube.com/watch?v=K9p8hkBKrpI&t=686s"
+    }
+  ]
+}
